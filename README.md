@@ -11,7 +11,7 @@ go build -o goverlook .
 ```
 
 ## Running
-_(with `maze` in executable path)_
+_(with `goverlook` in executable path)_
 
 Default will create a new 20x20 maze and output as a PNG on stdout:
 ```
