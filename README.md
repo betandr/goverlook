@@ -38,6 +38,11 @@ Rendering a JSON maze from stdin:
 cat out.json | goverlook > out.png
 ```
 
+Chaining `goverlook` into generation / render stages:
+```
+goverlook -out=json | goverlook > out.png
+```
+
 ## Testing
 ```
 go test .
