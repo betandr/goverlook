@@ -43,6 +43,30 @@ Chaining `goverlook` into generation / render stages:
 goverlook -out=json | goverlook > out.png
 ```
 
+## JSON Format
+Mazes are represented as a collection of collections of "cells". Each cell has a `northRoute` and `westRoute` boolean.
+
+```
+{
+	"cells": [
+		[{
+			"northRoute": false,
+			"westRoute": false
+		}, {
+			"northRoute": false,
+			"westRoute": false
+		}],
+		[{
+			"northRoute": false,
+			"westRoute": true
+		}, {
+			"northRoute": true,
+			"westRoute": true
+		}]
+	]
+}
+```
+
 ## Testing
 ```
 go test .
