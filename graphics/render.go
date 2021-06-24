@@ -49,12 +49,12 @@ func Render(w io.Writer, m *maze.Maze, goal maze.Position) {
 	fill(0, 0, width, height)
 	// -background
 
-	// // goal-
-	// clr = green
-	// goalX := goal.X * cellSize
-	// goalY := goal.Y * cellSize
-	// fill(goalX, goalY, goalX+cellSize, goalY+cellSize)
-	// // -goal
+	// goal-
+	clr = green
+	goalX := goal.X * cellSize
+	goalY := goal.Y * cellSize
+	fill(goalX, goalY, goalX+cellSize, goalY+cellSize)
+	// -goal
 
 	clr = color.Black
 
