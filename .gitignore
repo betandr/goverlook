@@ -1,6 +1,8 @@
 *.png
 !images/maze.png
 
+out.json
+
 .DS_Store
 
 # Binaries for programs and plugins

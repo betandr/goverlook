@@ -1,7 +1,9 @@
 package maze
 
 import (
+	"encoding/json"
 	"errors"
+	"fmt"
 	"math/rand"
 )
 
@@ -37,17 +39,18 @@ func (s *Route) IsEmpty() bool {
 // the default type for a bool is false so by default there is no route from that cell.
 // This saves constructing cells with true values.
 type Cell struct {
-	NorthRoute bool
-	WestRoute  bool
-	Visited    bool
+	NorthRoute bool `json:"northRoute"`
+	WestRoute  bool `json:"westRoute"`
+	Visited    bool `json:"-"`
 }
 
 // maze represents the entire maze
 type Maze struct {
-	Cells [][]Cell
+	Cells [][]Cell `json:"cells"`
 }
 
-func New(width, height int, start Position) Maze {
+// New creates a new Maze problem
+func New(width, height int, start Position) (Maze, error) {
 	route := make(Route, 0)
 
 	var m Maze
@@ -59,7 +62,27 @@ func New(width, height int, start Position) Maze {
 
 	m.generate(start, &route)
 
-	return m
+	return m, nil
+}
+
+// Load creates a Maze from a JSON string
+func Load(s string) (Maze, error) {
+	var m Maze
+	err := json.Unmarshal([]byte(s), &m)
+	if err != nil {
+		return Maze{}, fmt.Errorf("load error: %s", err)
+	}
+
+	return m, nil
+}
+
+// JSON returns a representation of the maze in JSON
+func (m *Maze) JSON() (string, error) {
+	b, err := json.Marshal(m)
+	if err != nil {
+		return "", errors.New("could not marshal as json")
+	}
+	return string(b), nil
 }
 
 // generate a new maze problem if the maze is new

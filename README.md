@@ -3,21 +3,42 @@ _Named after the Overlook hotel in The Shining, Goverlook generates a maze_
 
 ![Maze](/images/maze.png)
 
-## Running
-```
-go run . -width=n -height=n > output.png
-```
-...where `n` are integers
-
-## Building and Running Binary
+## Building
 
 ### With Go installed [https://golang.org/doc/install]:
 ```
-go build -o maze .
-./maze -width=n -height=n > output.png
+go build -o goverlook .
 ```
 
-## Running Tests
+## Running
+_(with `maze` in executable path)_
+
+Default will create a new 20x20 maze and output as a PNG on stdout:
+```
+goverlook > out.png
+```
+
+Maze with specific size:
+```
+goverlook -width=60 -height=40 > out.png
+```
+
+Maze rendering as PNG (default):
+```
+goverlook -out=png > out.png
+```
+
+Maze rendering as JSON:
+```
+goverlook -out=json > out.json
+```
+
+Rendering a JSON maze from stdin:
+```
+cat out.json | goverlook > out.png
+```
+
+## Testing
 ```
 go test .
 ```
