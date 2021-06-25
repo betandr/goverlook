@@ -3,72 +3,102 @@ package main
 import (
 	"bufio"
 	"bytes"
+	"encoding/json"
+	"os"
+	"strings"
 	"testing"
-
-	"github.com/betandr/goverlook/graphics"
-	"github.com/betandr/goverlook/maze"
 )
 
-func TestMazeStartAtMaximum(t *testing.T) {
-	width := 20
-	height := 20
+var mazeJsonStr = `
+{
+	"cells": [
+		[{
+			"northRoute": false,
+			"westRoute": false
+		}, {
+			"northRoute": true,
+			"westRoute": false
+		}],
+		[{
+			"northRoute": false,
+			"westRoute": false
+		}, {
+			"northRoute": true,
+			"westRoute": true
+		}]
+	]
+}
+`
 
-	startX := width - 1
-	startY := height - 1
+func TestMainLoadCreatesNonZeroOutput(t *testing.T) {
 
-	start := maze.Position{
-		X: startX,
-		Y: startY,
-	}
+	var buf bytes.Buffer
+	out := bufio.NewWriter(&buf)
+	in := strings.NewReader(mazeJsonStr)
 
-	m := maze.New(width, height, start)
+	run(map[string]string{}, out, in, true)
+	out.Flush()
 
-	cell := m.Cells[startX][startX]
-
-	if !cell.Visited {
-		t.Errorf("cell not marked visited: cell [%d, %d] w/h: %d/%d", startX, startY, width, height)
+	if len(buf.Bytes()) <= 0 {
+		t.Errorf("output size error: %d bytes", len(buf.Bytes()))
 	}
 }
 
-func TestImageRenderedGreaterThanZeroBytes(t *testing.T) {
-	start := maze.Position{X: 0, Y: 0}
-	m := maze.New(10, 10, start)
+func TestMainLoadWithBadJSONDoesNotPanic(t *testing.T) {
 
-	var b bytes.Buffer
-	buf := bufio.NewWriter(&b)
+	var buf bytes.Buffer
+	out := bufio.NewWriter(&buf)
+	in := strings.NewReader("NOT-JSON")
 
-	graphics.Render(buf, &m, start)
+	run(map[string]string{}, out, in, true)
+}
 
-	if buf.Size() <= 0 {
-		t.Errorf("image not rendered: contains %d bytes", buf.Size())
+func TestMainGenerateCreatesNonZeroOutput(t *testing.T) {
+
+	var buf bytes.Buffer
+	out := bufio.NewWriter(&buf)
+	in := bufio.NewReader(os.Stdin)
+
+	run(map[string]string{}, out, in, false)
+	out.Flush()
+
+	if len(buf.Bytes()) <= 0 {
+		t.Errorf("output size error: %d bytes", len(buf.Bytes()))
 	}
 }
 
-func TestGenerateMaze(t *testing.T) {
-	var b bytes.Buffer
-	buf := bufio.NewWriter(&b)
+func TestMainWithWidthCreatesNonZeroOutput(t *testing.T) {
 
-	generateMaze(buf)
+	var buf bytes.Buffer
+	out := bufio.NewWriter(&buf)
 
-	if buf.Size() <= 0 {
-		t.Errorf("maze not rendered: contains %d bytes", buf.Size())
+	in := bufio.NewReader(os.Stdin)
+
+	args := map[string]string{"width": "10", "height": "10"}
+
+	run(args, out, in, false)
+	out.Flush()
+
+	if len(buf.Bytes()) <= 0 {
+		t.Errorf("output size error: %d bytes", len(buf.Bytes()))
 	}
 }
+func TestMainWithJSONContainsCellsField(t *testing.T) {
+	var buf bytes.Buffer
+	out := bufio.NewWriter(&buf)
+	in := bufio.NewReader(os.Stdin)
 
-func TestGenerateMazeWithMaxStartPosition(t *testing.T) {
+	args := map[string]string{"out": "json"}
+	run(args, out, in, false)
+	out.Flush()
 
-	width := 10
-	height := 10
-	start := maze.Position{
-		X: width - 1,
-		Y: height - 1,
+	var outputMap map[string]json.RawMessage
+	err := json.Unmarshal(buf.Bytes(), &outputMap)
+	if err != nil {
+		t.Errorf(err.Error())
 	}
 
-	m := maze.New(10, 10, start)
-
-	mX := len(m.Cells[0])
-	mY := len(m.Cells)
-	if len(m.Cells) != 10 && len(m.Cells[0]) != 10 {
-		t.Errorf("%d by %d maze not generated correctly: is %d by %d ", width, height, mX, mY)
+	if _, ok := outputMap["cells"]; !ok {
+		t.Errorf("maze output json does not contain 'cells' field")
 	}
 }

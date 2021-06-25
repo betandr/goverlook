@@ -1,6 +1,8 @@
 *.png
 !images/maze.png
 
+profile.cov
+
 out.json
 
 .DS_Store

@@ -69,5 +69,15 @@ Mazes are represented as a collection of collections of "cells". Each cell has a
 
 ## Testing
 ```
-go test .
+go test ./...
+```
+
+### Testing With Coverage
+```
+go test -v -coverpkg=./... -coverprofile=profile.cov ./...
+```
+
+### Test Coverage
+```
+go tool cover -func profile.cov
 ```
