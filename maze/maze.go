@@ -77,12 +77,9 @@ func Load(s string) (Maze, error) {
 }
 
 // JSON returns a representation of the maze in JSON
-func (m *Maze) JSON() (string, error) {
-	b, err := json.Marshal(m)
-	if err != nil {
-		return "", errors.New("could not marshal as json")
-	}
-	return string(b), nil
+func (m *Maze) JSON() string {
+	b, _ := json.Marshal(m)
+	return string(b)
 }
 
 // generate a new maze problem if the maze is new
