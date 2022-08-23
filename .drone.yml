@@ -5,4 +5,5 @@ steps:
 - name: main
   image: golang
   commands:
+  - go mod tidy
   - go test
