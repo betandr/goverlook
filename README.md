@@ -1,6 +1,8 @@
 # Maze Generator
 _Named after the Overlook hotel in The Shining, Goverlook generates a maze_
 
+[![Build Status](https://drone.andr.io/api/badges/betandr/goverlook/status.svg)](https://drone.andr.io/betandr/goverlook)
+
 ![Maze](/images/maze.png)
 
 ## Building
