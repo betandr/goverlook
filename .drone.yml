@@ -6,10 +6,3 @@ steps:
   image: golang
   commands:
   - go test
-
-- name: slack
-  image: plugins/slack
-  settings:
-    webhook:
-      from_secret: slack_webhook
-    channel: notifications
